@@ -61,7 +61,8 @@ namespace ellabi.ViewModels
         private double? _initialVolume;
         private CoreAudioDevice _defaultPlaybackDevice;
         private Guid _activeExecutionId;
-        private object _lock = new object();
+        private object _actionsLock = new object();
+        private object _pauseLock = new object();
         private bool _updateAvailable;
         //private DateTime _startTime;
         //private string _previousActiveWindowTitle;
@@ -646,7 +647,7 @@ namespace ellabi.ViewModels
 
             try
             {
-                lock (_lock)
+                lock (_actionsLock)
                 {
                     var executionId = _activeExecutionId;
                     var lastInputTime = StaticCode.GetLastInputTime();
@@ -795,7 +796,18 @@ namespace ellabi.ViewModels
         private void StopAutoPauseTimer()
         {
             StaticCode.Logger?.Here().Debug(String.Empty);
-            _autoPauseTimer?.Stop();
+            
+            lock (_pauseLock)
+            {
+                try
+                {
+                    _autoPauseTimer?.Stop();
+                }
+                catch (Exception ex)
+                {
+                    StaticCode.Logger?.Here().Error(ex.Message);
+                }
+            }
         }
 
         private void _autoPauseTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -804,9 +816,12 @@ namespace ellabi.ViewModels
             {
                 StaticCode.Logger?.Here().Debug(StaticCode.GetLastInputTime().ToString());
 
-                if (CurrentState.Equals(MouseState.Running) && (StaticCode.GetLastInputTime() < TimeSpan.FromMilliseconds(_autoPauseTimer.Interval)))
+                lock (_pauseLock)
                 {
-                    Stop((SettingsVm.Settings.AutoPause && SettingsVm.Settings.AutoResume) ? MouseState.Paused : MouseState.Idle);
+                    if (CurrentState.Equals(MouseState.Running) && (StaticCode.GetLastInputTime() < TimeSpan.FromMilliseconds(_autoPauseTimer.Interval)))
+                    {
+                        Stop((SettingsVm.Settings.AutoPause && SettingsVm.Settings.AutoResume) ? MouseState.Paused : MouseState.Idle);
+                    }
                 }
             }
             catch (Exception ex)

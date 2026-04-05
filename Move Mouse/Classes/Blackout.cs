@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
@@ -21,8 +20,19 @@ namespace ellabi.Classes
         private bool _sunday;
         private TimeSpan _time;
         private TimeSpan _duration;
+        private bool _isEnabled;
 
         public bool IsValid => (Monday || Tuesday || Wednesday || Thursday || Friday || Saturday || Sunday);
+
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                _isEnabled = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Guid Id { get; set; }
 
@@ -242,6 +252,7 @@ namespace ellabi.Classes
                 Friday = true;
                 Saturday = true;
                 Sunday = true;
+                _isEnabled = true;
             }
             catch (Exception ex)
             {

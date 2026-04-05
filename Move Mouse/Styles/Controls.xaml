@@ -93,6 +93,11 @@
         <Setter Property="ThumbSize" Value="15"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="IsTabStop" Value="True"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="CheckedBackground" Value="Transparent"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style TargetType="Button">
         <Style.Resources>

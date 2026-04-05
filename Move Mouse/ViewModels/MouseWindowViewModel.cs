@@ -289,7 +289,7 @@ namespace ellabi.ViewModels
 
                         //if (_lastSchedulesUpdateTime.Add(_schedulesUpdateDelay) > DateTime.Now)
                         //{
-                        await CleanupJobs();
+                        CleanupJobs();
 
                         //while (_lastSchedulesUpdateTime.Add(_schedulesUpdateDelay) > DateTime.Now)
                         //{
@@ -299,9 +299,9 @@ namespace ellabi.ViewModels
                         _schedulerFactory = new StdSchedulerFactory();
                         _scheduler = await _schedulerFactory.GetScheduler();
 
-                        if ((SettingsVm.Settings.Schedules != null) && SettingsVm.Settings.Schedules.Any(schedule => schedule.IsValid))
+                        if ((SettingsVm.Settings.Schedules != null) && SettingsVm.Settings.Schedules.Any(schedule => schedule.IsValid && schedule.IsEnabled))
                         {
-                            foreach (var schedule in SettingsVm.Settings.Schedules.Where(schedule => schedule.IsValid))
+                            foreach (var schedule in SettingsVm.Settings.Schedules.Where(schedule => schedule.IsValid && schedule.IsEnabled))
                             {
                                 try
                                 {
@@ -364,7 +364,7 @@ namespace ellabi.ViewModels
             }
         }
 
-        private async Task CleanupJobs()
+        private void CleanupJobs()
         {
             StaticCode.Logger?.Here().Debug(String.Empty);
 
@@ -372,9 +372,8 @@ namespace ellabi.ViewModels
             {
                 if ((_scheduler != null) && !_scheduler.IsShutdown)
                 {
-                    await _scheduler?.Clear();
-                    await _scheduler?.Shutdown();
-
+                    Task.WaitAll(new[] { _scheduler?.Clear() });
+                    Task.WaitAll(new[] { _scheduler?.Shutdown(false) });
                 }
             }
             catch (Exception ex)
@@ -952,7 +951,7 @@ namespace ellabi.ViewModels
 
             try
             {
-                blackoutIsActive = (SettingsVm.Settings.Blackouts != null) && SettingsVm.Settings.Blackouts.Any(blackout => (blackout.EnabledDays.Any(day => day.Equals(DateTime.Now.AddDays(-1).DayOfWeek)) && (new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day, blackout.Time.Hours, blackout.Time.Minutes, blackout.Time.Seconds).Add(blackout.Duration) > DateTime.Now)) || (blackout.EnabledDays.Any(day => day.Equals(DateTime.Now.DayOfWeek)) && (blackout.Time < DateTime.Now.TimeOfDay) && (blackout.Time.Add(blackout.Duration) > DateTime.Now.TimeOfDay)));
+                blackoutIsActive = (SettingsVm.Settings.Blackouts != null) && SettingsVm.Settings.Blackouts.Any(blackout => blackout.IsEnabled && ((blackout.EnabledDays.Any(day => day.Equals(DateTime.Now.AddDays(-1).DayOfWeek)) && (new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, DateTime.Now.AddDays(-1).Day, blackout.Time.Hours, blackout.Time.Minutes, blackout.Time.Seconds).Add(blackout.Duration) > DateTime.Now)) || (blackout.EnabledDays.Any(day => day.Equals(DateTime.Now.DayOfWeek)) && (blackout.Time < DateTime.Now.TimeOfDay) && (blackout.Time.Add(blackout.Duration) > DateTime.Now.TimeOfDay))));
             }
             catch (Exception ex)
             {
@@ -1088,7 +1087,7 @@ namespace ellabi.ViewModels
             try
             {
                 RestoreVolume();
-                Task.WaitAll(new[] { CleanupJobs() });
+                CleanupJobs();
                 StaticCode.ScheduleArrived -= StaticCode_ScheduleArrived;
                 //StaticCode.ThemeUpdated -= StaticCode_ThemeUpdated;
                 StaticCode.UpdateAvailablityChanged -= StaticCode_UpdateAvailablityChanged;

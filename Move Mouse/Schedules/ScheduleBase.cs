@@ -13,11 +13,22 @@ namespace ellabi.Schedules
         public event PropertyChangedEventHandler PropertyChanged;
 
         private ScheduleAction _action;
+        private bool _isEnabled;
 
         public enum ScheduleAction
         {
             Start,
             Stop
+        }
+
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                _isEnabled = value;
+                OnPropertyChanged();
+            }
         }
 
         public abstract bool IsValid { get; }
@@ -42,6 +53,7 @@ namespace ellabi.Schedules
         protected ScheduleBase()
         {
             Id = Guid.NewGuid();
+            _isEnabled = true;
         }
 
         [NotifyPropertyChangedInvocator]

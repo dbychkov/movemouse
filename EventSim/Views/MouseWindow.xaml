@@ -353,7 +353,7 @@
                                     </Image.Style>
                                 </Image>
                             </Button>
-                            <Button AutomationProperties.Name="Pay Pal" Click="PayPalButton_OnClick">
+                            <!--Button AutomationProperties.Name="Pay Pal" Click="PayPalButton_OnClick">
                                 <Image>
                                     <Image.Style>
                                         <Style TargetType="Image" BasedOn="{StaticResource StandardImageStyle}">
@@ -394,7 +394,7 @@
                                         </Style>
                                     </Image.Style>
                                 </Image>
-                            </Button>
+                            </Button-->
                             <Button AutomationProperties.Name="Close" Click="CloseButton_OnClick">
                                 <Image>
                                     <Image.Style>

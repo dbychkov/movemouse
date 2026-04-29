@@ -2870,7 +2870,7 @@
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
-                        <Image Grid.Row="2" Grid.Column="0" Source="/Resources/Copyright_Dark_64x64.png"/>
+                        <!--Image Grid.Row="2" Grid.Column="0" Source="/Resources/Copyright_Dark_64x64.png"/>
                         <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=Copyright, Mode=OneWay}"/>
                         <Image Grid.Row="4" Grid.Column="0" Source="/Resources/Home_Dark_64x64.png"/>
                         <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Path=HomePage, Mode=OneWay}" Style="{StaticResource HyperLinkTextBlockStyle}" MouseDown="HomeLink_OnMouseDown"/>
@@ -2881,7 +2881,7 @@
                         <Image Grid.Row="10" Grid.Column="0" Source="/Resources/Twitter_Dark_64x64.png"/>
                         <TextBlock Grid.Row="10" Grid.Column="2" Text="{Binding Path=TwitterUrl, Mode=OneWay}" Style="{StaticResource HyperLinkTextBlockStyle}" MouseDown="TwitterLink_OnMouseDown"/>
                         <Image Grid.Row="12" Grid.Column="0" Source="/Resources/GitHub_Dark_64x64.png"/>
-                        <TextBlock Grid.Row="12" Grid.Column="2" Text="{Binding Path=GitHubUrl, Mode=OneWay}" Style="{StaticResource HyperLinkTextBlockStyle}" MouseDown="GitHubLink_OnMouseDown"/>
+                        <TextBlock Grid.Row="12" Grid.Column="2" Text="{Binding Path=GitHubUrl, Mode=OneWay}" Style="{StaticResource HyperLinkTextBlockStyle}" MouseDown="GitHubLink_OnMouseDown"/-->
                         <Image Grid.Row="14" Grid.Column="0" Source="/Resources/Timer_Dark_64x64.png"/>
                         <TextBlock Grid.Row="14" Grid.Column="2" Text="{Binding Path=SystemIdleTime, Mode=OneWay, NotifyOnTargetUpdated=True, StringFormat='System Idle Time - {0:hh}h {0:mm}m {0:ss}s {0:fff}ms'}"/>
                     </Grid>
